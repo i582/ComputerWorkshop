@@ -1,0 +1,1 @@
+powershell.exe -command ..\scripts\build.ps1 -md main.md -template ..\templates\template-without-numbers.docx -docx ready\\report-1.docx -pdf ready\\report-1.pdf -embedfonts -counters

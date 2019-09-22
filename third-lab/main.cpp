@@ -77,7 +77,7 @@ int main(int argc, char** argv)
 
 		case 1:
 		{
-			//LoadRun("array_proc.dll", "array_proc\0");
+			LoadRun("array_proc.dll", "array_proc\0");
 
 			int* mas = new int[73];
 
