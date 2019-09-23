@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __linux
+<<<<<<< .merge_file_a05572
+
 
 #include <dlfcn.h>
 
 #define LOAD_LIBRARY(lib_name, flags) dlopen(lib_name, flags)
 #define LOAD_FUNCTION(lib, func_name) dlsym(lib, func_name)
 #define CLOSE_LIBRARY(lib) dlclose(lib)
+=======
 
-
-#elif defined _WIN32
 
 #include <windows.h>
 
@@ -18,8 +18,7 @@
 #define LOAD_FUNCTION(lib, func_name) GetProcAddress((HINSTANCE)lib, func_name)
 #define CLOSE_LIBRARY(lib) FreeLibrary((HINSTANCE)lib);
 
-
-#endif
+>>>>>>> .merge_file_a12584
 
 
 #include "iostream"

@@ -32,51 +32,23 @@
 
 #include <dlfcn.h>
 
-void LoadRun(const char* const s, const char* const func_name) {
-	void* lib;
-	void (*fun)(void);
-	lib = dlopen(s, RTLD_LAZY);
-	if (!lib) {
-		printf("cannot open library '%s'\n", s);
-		return;
-	}
-	fun = (void (*)(void))dlsym(lib, func_name);
-	if (fun == NULL) {
-		printf("cannot load function func\n");
-	}
-	else {
-		fun();
-	}
-	dlclose(lib);
-}
+#define LOAD_LIBRARY(lib_name, flags) dlopen(lib_name, flags)
+#define LOAD_FUNCTION(lib, func_name) dlsym(lib, func_name)
+#define CLOSE_LIBRARY(lib) dlclose(lib)
+
 
 #elif defined _WIN32
 
 #include <windows.h>
 
-void LoadRun(const char* const s, const char* const func_name) {
-	void* lib;
-	void (*fun)(void);
-	lib = LoadLibrary(s);
-	if (!lib) {
-		printf("cannot open library '%s'\n", s);
-		return;
-	}
-	fun = (void (*)(void))GetProcAddress((HINSTANCE)lib, func_name);
-	if (fun == NULL) {
-		int error = GetLastError();
-		printf("cannot load function %s, error is %d\n", func_name, error);
-	}
-	else {
-		fun();
-	}
-	FreeLibrary((HINSTANCE)lib);
-}
+#define LOAD_LIBRARY(lib_name, flags) LoadLibrary(lib_name)
+#define LOAD_FUNCTION(lib, func_name) GetProcAddress((HINSTANCE)lib, func_name)
+#define CLOSE_LIBRARY(lib) FreeLibrary((HINSTANCE)lib);
+
 
 #endif
 
-#include "array_proc.h"
-#include "matrix_proc.h"
+
 #include "iostream"
 using namespace std;
 
@@ -104,7 +76,14 @@ int main(int argc, char** argv)
 
 		case 1:
 		{
-			LoadRun("array_proc.dll", "array_proc\0");
+			void* lib = LOAD_LIBRARY("array_proc.dll", NULL);
+			if (!lib)
+			{
+				printf("Error open lib\n");
+				break;
+			}
+			int (__stdcall *array_proc) (int*, int) = (__stdcall int (*)(int*, int))LOAD_FUNCTION(lib, "array_proc\0");
+			
 
 			int* mas = new int[73];
 
@@ -121,7 +100,13 @@ int main(int argc, char** argv)
 
 		case 2:
 		{
-			LoadRun("matrix_proc.dll", "matrix_proc\0");
+			void* lib = LOAD_LIBRARY("matrix_proc.dll", NULL);
+			if (!lib)
+			{
+				printf("Error open lib\n");
+				break;
+			}
+			int (__stdcall *matrix_proc) (int**, int, int) = (__stdcall int (*)(int**, int, int))LOAD_FUNCTION(lib, "matrix_proc\0");
 
 
 			int** matrix = new int*[7];
@@ -217,46 +202,19 @@ extern "C" __declspec(dllexport) int matrix_proc(int* matrix[], int m, int n)
 
 #include <dlfcn.h>
 
-void LoadRun(const char* const s, const char* const func_name) {
-	void* lib;
-	void (*fun)(void);
-	lib = dlopen(s, RTLD_LAZY);
-	if (!lib) {
-		printf("cannot open library '%s'\n", s);
-		return;
-	}
-	fun = (void (*)(void))dlsym(lib, func_name);
-	if (fun == NULL) {
-		printf("cannot load function func\n");
-	}
-	else {
-		fun();
-	}
-	dlclose(lib);
-}
+#define LOAD_LIBRARY(lib_name, flags) dlopen(lib_name, flags)
+#define LOAD_FUNCTION(lib, func_name) dlsym(lib, func_name)
+#define CLOSE_LIBRARY(lib) dlclose(lib)
+
 
 #elif defined _WIN32
 
 #include <windows.h>
 
-void LoadRun(const char* const s, const char* const func_name) {
-	void* lib;
-	void (*fun)(void);
-	lib = LoadLibrary(s);
-	if (!lib) {
-		printf("cannot open library '%s'\n", s);
-		return;
-	}
-	fun = (void (*)(void))GetProcAddress((HINSTANCE)lib, func_name);
-	if (fun == NULL) {
-		int error = GetLastError();
-		printf("cannot load function %s, error is %d\n", func_name, error);
-	}
-	else {
-		fun();
-	}
-	FreeLibrary((HINSTANCE)lib);
-}
+#define LOAD_LIBRARY(lib_name, flags) LoadLibrary(lib_name)
+#define LOAD_FUNCTION(lib, func_name) GetProcAddress((HINSTANCE)lib, func_name)
+#define CLOSE_LIBRARY(lib) FreeLibrary((HINSTANCE)lib);
+
 
 #endif
 ```
