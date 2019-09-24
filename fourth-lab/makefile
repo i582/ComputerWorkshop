@@ -113,7 +113,7 @@ str_proc.o:
 # compile first part of third lab                         #
 ###########################################################
 third_first: larray_proc lmatrix_proc
-	${CPP} ${PATH_THIRD}main.cpp -o ${PATH_THIRD}${BIN_PATH}${APP} -L${PATH_THIRD}${BIN_PATH} -larray_proc -lmatrix_proc
+	${CPP} ${PATH_THIRD}main.cpp -o ${PATH_THIRD}${BIN_PATH}${APP}
 
 larray_proc: array_proc.o
 	${CPP} -shared -o ${PATH_THIRD}${BIN_PATH}array_proc.dll ${PATH_THIRD}array_proc.o
